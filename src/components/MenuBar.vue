@@ -99,9 +99,11 @@ export default {
     }
   },
   methods: {
+    // 隐藏目录
     hideContent() {
       this.ifShowContent = false
     },
+    // 跳转方法，调用父组件方法
     jumpTo(target) {
       this.$emit('jumpTo', target)
     },
@@ -114,12 +116,15 @@ export default {
     onProgressChange(progress) {
       this.$emit('onProgressChange', progress)
     },
+    // 设置主题
     setTheme(index) {
       this.$emit('setTheme', index)
     },
+    // 设置字号
     setFontSize(fontSize) {
       this.$emit('setFontSize', fontSize)
     },
+    // 显示设置面板
     showSetting(tag) {
       this.showTag = tag
       if (this.showTag === 3) {
@@ -129,6 +134,7 @@ export default {
         this.ifSettingShow = true
       }
     },
+    // 显示设置面板
     hideSetting() {
       this.ifSettingShow = false
     }

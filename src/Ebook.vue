@@ -108,47 +108,53 @@ export default {
       const location = percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0
       this.rendition.display(location)
     },
+    // 设置主题
     setTheme(index) {
       this.themes.select(this.themeList[index].name)
       this.defaultTheme = index
     },
+    // 注册主题
     registerTheme() {
       this.themeList.forEach(theme => {
         this.themes.register(theme.name, theme.style)
       })
     },
+    // 设置字号大小
     setFontSize(fontSize) {
       this.defaultFontSize = fontSize
       if (this.themes) {
         this.themes.fontSize(fontSize + 'px')
       }
     },
+    // 切换标题和菜单的显示状态
     toggleTitleAndMenu() {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
       if (!this.ifTitleAndMenuShow) {
         this.$refs.menuBar.hideSetting()
       }
     },
+    // 上一页
     prevPage() {
-      // Rendition.prev
       if (this.rendition) {
         this.rendition.prev()
       }
     },
+    // 下一页
     nextPage() {
-      // Rendition.next
       if (this.rendition) {
         this.rendition.next()
       }
     },
     // 电子书的解析和渲染
     showEpub() {
-      // 生成Book
+      // 生成Book对象
       this.book = new Epub(DOWNLOAD_URL)
-      // 生成Rendition，通过Book.renderTo
+      // 通过Book.renderTo生成Rendition对象
       this.rendition = this.book.renderTo('read', {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
+        // 兼容iOS
+        method: 'default'
       })
       // 通过Rendtion.display渲染电子书
       this.rendition.display()
@@ -156,17 +162,19 @@ export default {
       this.themes = this.rendition.themes
       // 设置默认字体
       this.setFontSize(this.defaultFontSize)
-      // this.themes.register(name, styles)
-      // this.themes.select(name)
+      // 注册主题
       this.registerTheme()
+      // 设置默认主题
       this.setTheme(this.defaultTheme)
-      // 获取Locations对象
-      // 通过epubjs的钩子函数来实现
+      // Book对象的钩子函数ready
       this.book.ready.then(() => {
         this.navigation = this.book.navigation
+        // 生成Locations对象
         return this.book.locations.generate()
       }).then(result => {
+        // 保存locations对象
         this.locations = this.book.locations
+        // 标记电子书为解析完毕状态
         this.bookAvailable = true
       })
     }
